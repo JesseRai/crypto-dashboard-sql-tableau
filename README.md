@@ -40,9 +40,7 @@ README.md    # This README
 
 ## Data
 
-The raw data comes from a Kaggle cryptocurrency price history dataset. Each record contains the currency name along with open, high, low and closing prices, trading volume and marketand closing pricThe raw data comes from a Kaggle cryptocurrency price history dataset. Each record contains the currency name along with open, high, low and closing prices, trading volume and market capitalisation.
-market capitalisation.
-
+The eraw data comes from a Kaggle cryptocurrency price history dataset. Each record contains the currency name along with open, high, low and closing prices, trading volume and market capitalisation.
 ## SQL Processing (Reflected by the Proposed Structure)
 
 1. **Create table** – Run the script in `01_create_table/create_crypto_clean.sql` to create the `crypto_clean` table.
