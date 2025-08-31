@@ -65,13 +65,6 @@ A Tableau dashboard built from the exported time-series CSVs provides an interac
 
 The Tableau dashboard uses CSV outputs from the SQL scripts, so results are synchronised with your data processing logic.
 
-## Getting Started
-
-1. **Load raw data** – Download the Kaggle cryptocurrency price history dataset and import it into a PostgreSQL database using pgAdmin. Ensure columns match the schema defined in `create_crypto_clean.sql` (currency, date, open, high, low, close, volume, market cap).
-2. **Run the SQL scripts** – Execute each script in the `SQL` directory in numerical order using pgAdmin. This will create tables and views and compute the necessary metrics.
-3. **Export to CSV** – From your PostgreSQL database, export the results of the relevant views (e.g., `v_crypto_kpis2`, `v_price_timeseries`) to CSV files.
-4. **Build the Tableau dashboard** – Use the exported CSV files to populate the Tableau workbook. Alternatively, explore the hosted dashboard online.
-
 ## Dashboard Preview
 
 Below is a static preview of the interactive dashboard. The live version allows you to filter by cryptocurrency and adjust the date range.
