@@ -41,7 +41,7 @@ README.md    # This README
 ## Data
 
 The raw data comes from a Kaggle cryptocurrency price history dataset. Each record contains the currency name along with open, high, low and closing prices, trading volume and market capitalisation.
-## SQL Processing (Reflected by the Proposed Structure)
+## SQL Processing (Reflected by the Proposed Structure) 
 
 1. **Create table** – Run the script in `01_create_table/create_crypto_clean.sql` to create the `crypto_clean` table.
 2. **Filter zero values** – Execute `02_clean_data/create_view_crypto_clean_nozero.sql` to build a view `crypto_clean_nozero` that filters out records where any of the prices (open, high, low, close) are zero.
