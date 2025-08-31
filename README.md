@@ -1,41 +1,47 @@
-# Crypto Dashboard Project
+# crypto-dashboard-sql-tableau
 
-This repository showcases a simple pipeline for exploring and visualising cryptocurrency market data using **SQL** for data processing and **Tableau** for dashboard creation.  It combines raw price data, a series of SQL queries to compute key metrics, and an interactive Tableau dashboard which can be explored online or recreated locally.
+## About
+
+crypto-dashboard-sql-tableau provides a data-processing and visualization pipeline for cryptocurrency prices. It uses PostgreSQL (via pgAdmin) and SQL scripts to construct tables, views and metrics from a Kaggle cryptocurrency price dataset. The processed data powers an interactive Tableau dashboard with price charts, moving averages and key performance indicators.
+
+This repository showcases a simple pipeline for exploring and visualising cryptocurrency market data using **SQL** for data processing and **Tableau** for dashboard creation. It combines raw price data, a series of SQL queries to compute key metrics, and an interactive Tableau dashboard which can be explored online or recreated locally.
 
 ## Proposed Repository Structure
 
-To make the SQL scripts easier to manage and understand, each logical step is split into its own directory.  Within each directory there is a single `.sql` file containing the relevant statements.
+To make the SQL scripts easier to manage and understand, each logical step is split into its own directory. Within each directory there is a single `.sql` file containing the relevant statements.
 
 ```text
 SQL/
 ├── 01_create_table/
-│   └── create_crypto_clean.sql       # Creates the `crypto_clean` table
+│   └── create_crypto_clean.sql   # Creates the `crypto_clean` table
 ├── 02_clean_data/
 │   └── create_view_crypto_clean_nozero.sql  # Defines the `crypto_clean_nozero` view for filtering zero values
 ├── 03_daily_returns/
-│   └── query_daily_returns.sql       # Computes daily return percentages for each currency
+│   └── query_daily_returns.sql   # Computes daily return percentages for each currency
 ├── 04_kpi_view/
 │   └── create_view_crypto_kpis.sql   # Builds the `v_crypto_kpis2` view of key performance indicators
 ├── 05_timeseries_view/
 │   └── create_view_price_timeseries.sql  # Defines the `v_price_timeseries` view with 7- and 30-day moving averages
 └── 06_extract_timeseries/
     └── query_select_timeseries.sql   # Selects the final time-series data from the view
-README.md       # This README
+README.md    # This README
+...
 ```
 
 - **01_create_table/create_crypto_clean.sql** – Creates a table `crypto_clean` to hold the raw data with appropriate data types (currency, date, open, high, low, close, volume and market cap).
 - **02_clean_data/create_view_crypto_clean_nozero.sql** – Defines a view `crypto_clean_nozero` that filters out records where the open, high, low or close prices are zero, ensuring downstream calculations are meaningful.
-- **03_daily_returns/query_daily_returns.sql** – Computes daily return percentages for each currency using a window function (`LAG`).  Results are rounded to two decimal places and null values are excluded.
+- **03_daily_returns/query_daily_returns.sql** – Computes daily return percentages for each currency using a window function (`LAG`). Results are rounded to two decimal places and null values are excluded.
 - **04_kpi_view/create_view_crypto_kpis.sql** – Creates a view `v_crypto_kpis2` that aggregates several KPIs:
   - The latest market capitalisation for each currency
-  - 30‑day volatility (standard deviation of daily returns over the last 30 days, expressed as a percentage)
+  - 30-day volatility (standard deviation of daily returns over the last 30 days, expressed as a percentage)
   - Market dominance (share), defined as the currency’s market cap divided by the total market cap on the latest date
-- **05_timeseries_view/create_view_price_timeseries.sql** – Defines a view `v_price_timeseries` that calculates 7‑day and 30‑day moving averages of the closing price for each currency, enabling smoother trend visualisation.
+- **05_timeseries_view/create_view_price_timeseries.sql** – Defines a view `v_price_timeseries` that calculates 7-day and 30-day moving averages of the closing price for each currency, enabling smoother trend visualisation.
 - **06_extract_timeseries/query_select_timeseries.sql** – A final query that selects data from `v_price_timeseries` and rounds the moving averages for presentation.
 
 ## Data
 
-The raw data comprises historical price information for several cryptocurrencies (e.g., Bitcoin, Ethereum).  Each record contains the currency name, trading date, and values for open price, high price, low price, close price, trading volume and market capitalisation.
+The raw data comes from a Kaggle cryptocurrency price history dataset. Each record contains the currency name along with open, high, low and closing prices, trading volume and marketand closing pricThe raw data comes from a Kaggle cryptocurrency price history dataset. Each record contains the currency name along with open, high, low and closing prices, trading volume and market capitalisation.
+market capitalisation.
 
 ## SQL Processing (Reflected by the Proposed Structure)
 
@@ -44,19 +50,13 @@ The raw data comprises historical price information for several cryptocurrencies
 3. **Compute daily returns** – Execute `03_daily_returns/query_daily_returns.sql` to compute daily return percentages for each currency using the `crypto_clean_nozero` view.
 4. **Generate KPIs** – Execute `04_kpi_view/create_view_crypto_kpis.sql` to build the `v_crypto_kpis2` view with key performance indicators (latest market cap, 30‑day volatility and market dominance).
 5. **Generate time series with moving averages** – Execute `05_timeseries_view/create_view_price_timeseries.sql` to define the `v_price_timeseries` view that includes 7‑day and 30‑day moving averages.
-6. **Extract final time series** – Run `06_extract_timeseries/query_select_timeseries.sql` to select the final time‑series data from `v_price_timeseries`, rounding the moving averages for presentation.
-
-These scripts can be executed sequentially in a database (e.g., PostgreSQL or SQLite).  The resulting tables and views can be exported to CSV files for use in the Tableau dashboard.
+6. **Select final time series** – Execute `06_extract_timeseries/query_select_timeseries.sql` to select and round the moving averages for presentation.
 
 ## Tableau Dashboard
 
-An interactive dashboard built in Tableau brings the processed data to life.  You can explore the live version here:
+A Tableau dashboard built from the exported time-series CSVs provides an interactive way to explore the data. The dashboard is available on Tableau Public and can also be recreated locally using the CSV outputs. The main panels show:
 
-<https://public.tableau.com/app/profile/jesse.rai/viz/CryptoDashboard_17565869209030/Dashboard1>
-
-Key features of the dashboard include:
-
-- **Cryptocurrency selector** – Choose from multiple currencies (e.g., Bitcoin, Ethereum) to update all visualisations simultaneously.
+- **Cryptocurrency selector** – choose from multiple currencies (e.g., Bitcoin, Ethereum) to update all visualisations simultaneously.
 - **Top‑level metrics** – Displayed panels show:
   - **30‑day volatility** (in percent) for the selected currency
   - **Latest market cap** in USD
@@ -69,17 +69,13 @@ The Tableau dashboard uses CSV outputs from the SQL scripts, so results are sync
 
 ## Getting Started
 
-1. **Load raw data** – Import your cryptocurrency price data into a relational database.  Ensure columns match the schema defined in `create_crypto_clean.sql` (currency, date, open, high, low, close, volume, market cap).
-2. **Run the SQL scripts** – Execute each script in the `SQL/` directory in numerical order.  This will create tables and views and produce the KPIs and time series used in the dashboard.
-3. **Export to CSV** – From your database, export the results of the relevant views (e.g., `v_crypto_kpis2`, `v_price_timeseries`) into CSV files.
-4. **Build/refresh the dashboard** – Open Tableau Desktop or Tableau Public, connect to the exported CSVs, and refresh the data sources.  The interactive dashboard will update automatically.
+1. **Load raw data** – Download the Kaggle cryptocurrency price history dataset and import it into a PostgreSQL database using pgAdmin. Ensure columns match the schema defined in `create_crypto_clean.sql` (currency, date, open, high, low, close, volume, market cap).
+2. **Run the SQL scripts** – Execute each script in the `SQL` directory in numerical order using pgAdmin. This will create tables and views and compute the necessary metrics.
+3. **Export to CSV** – From your PostgreSQL database, export the results of the relevant views (e.g., `v_crypto_kpis2`, `v_price_timeseries`) to CSV files.
+4. **Build the Tableau dashboard** – Use the exported CSV files to populate the Tableau workbook. Alternatively, explore the hosted dashboard online.
 
 ## Dashboard Preview
 
-Below is a screenshot of the Ethereum view of the dashboard.  It illustrates how the processed data appears in the interactive interface:
+Below is a static preview of the interactive dashboard. The live version allows you to filter by cryptocurrency and adjust the date range.
 
 ![Crypto Dashboard Preview](dashboard.png)
-
-## Contributing
-
-Contributions are welcome!  Feel free to fork the repository, improve the SQL scripts or visualisation, and open a pull request.
